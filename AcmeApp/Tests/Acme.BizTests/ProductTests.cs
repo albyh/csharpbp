@@ -99,7 +99,7 @@ namespace Acme.Biz.Tests
             // Arrange
             var currentProduct = new Product();
             var expected = .96m;
-            
+
             // Act
             var actual = currentProduct.MinimumPrice;
 
@@ -272,6 +272,21 @@ namespace Acme.Biz.Tests
 
             // Act
             var actual = currentProduct.ProductCode;
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        public void CalculateSuggestedPriceTest()
+        {
+            // Arrange
+            var currentProduct = new Product(1, "Saw", "");
+            currentProduct.Cost = 50m;
+            var expected = 55m;
+
+            // Act
+            var actual = currentProduct.CalculateSuggestedPrice(10m);
 
             // Assert
             Assert.AreEqual(expected, actual);
