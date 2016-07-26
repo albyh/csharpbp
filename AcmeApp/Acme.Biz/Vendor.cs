@@ -17,6 +17,70 @@ namespace Acme.Biz
         public string Email { get; set; }
 
         /// <summary>
+        /// Sends a product order to the vendor
+        /// </summary>
+        /// <param name="product">Product to order.</param>
+        /// <param name="quantity">Quantity of the Product to order.</param>
+        /// <returns></returns>
+        public OperationResult PlaceOrder(Product product, int quantity)
+        {
+            return PlaceOrder(product, quantity, null, null); 
+        }
+
+        /// <summary>
+        /// Sends a product order to the vendor
+        /// </summary>
+        /// <param name="product">Product to order.</param>
+        /// <param name="quantity">Quantity of the Product to order.</param>
+        /// <param name="deliverBy">Requested delivery date.</param>
+        /// <returns></returns>
+        public OperationResult PlaceOrder(Product product, int quantity, DateTimeOffset? deliverBy)
+        {
+            return PlaceOrder(product, quantity, deliverBy, null);
+        }
+
+        /// <summary>
+        /// Sends a product order to the vendor
+        /// </summary>
+        /// <param name="product">Product to order.</param>
+        /// <param name="quantity">Quantity of the Product to order.</param>
+        /// <param name="deliverBy">Requested delivery date.</param>
+        /// <param name="instructions">Delivery instructions</param>
+        /// <returns></returns>
+        public OperationResult PlaceOrder(Product product, int quantity, 
+                                            DateTimeOffset? deliverBy, 
+                                            string instructions)
+        {
+            if (product == null)
+                throw new ArgumentNullException(nameof(Product));
+            if (quantity <= 0)
+                throw new ArgumentOutOfRangeException(nameof(quantity));
+            if (deliverBy <= DateTimeOffset.Now)
+                throw new ArgumentOutOfRangeException(nameof(deliverBy));
+
+            var success = false;
+
+            var orderText = String.Format("Order from Acme, Inc{0}Product: {1}{0}Quantity: {2}", System.Environment.NewLine, product.ProductCode, quantity);
+
+            if (deliverBy.HasValue)
+            {
+                orderText += String.Format("{0}Deliver By: {1}",
+                                            Environment.NewLine, deliverBy.Value.ToString("d"));
+            }
+
+            var emailService = new EmailService();
+            var confirmation = emailService.SendMessage("New Order", orderText, this.Email);
+
+            if (confirmation.StartsWith("Message sent:"))
+            {
+                success = true;
+            }
+            var operationResult = new OperationResult(success, orderText);
+            return operationResult;
+        }
+
+
+        /// <summary>
         /// Sends an email to welcome a new vendor.
         /// </summary>
         /// <returns></returns>
