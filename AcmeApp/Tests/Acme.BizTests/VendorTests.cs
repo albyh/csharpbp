@@ -75,6 +75,24 @@ namespace Acme.Biz.Tests
         }
 
         [TestMethod()]
+        public void PlaceOrder_WithAddress()
+        {
+            // Arrange
+            var vendor = new Vendor();
+            var product = new Product(1, "Saw", "");
+            var expected = new OperationResult(true, "Test With Address");
+
+            // Act
+            var actual = vendor.PlaceOrder(product, 12,
+                Vendor.IncludeAddress.Yes, Vendor.SendCopy.No );
+
+            // Assert 
+            Assert.AreEqual(expected.Success, actual.Success);
+            Assert.AreEqual(expected.Message, actual.Message);
+        }
+
+
+        [TestMethod()]
         public void PlaceOrder_3Parameters()
         {
             //Arrange
@@ -106,5 +124,7 @@ namespace Acme.Biz.Tests
             // Assert 
             // Expected exception
         }
+
+
     }
 }
