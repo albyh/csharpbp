@@ -20,6 +20,7 @@ namespace Acme.Biz
         public Product()
         {
             //this.productVendor = new Vendor();
+            //moved this to lazy load in the ProductVendor Property
             Console.WriteLine("Product instance created");
             //set default value for read-only field
             this.MinimumPrice = .96m;
