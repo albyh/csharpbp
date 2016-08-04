@@ -1,10 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Acme.Biz;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Acme.Common;
 
 namespace Acme.Biz.Tests
 {
@@ -283,13 +278,17 @@ namespace Acme.Biz.Tests
             // Arrange
             var currentProduct = new Product(1, "Saw", "");
             currentProduct.Cost = 50m;
-            var expected = 55m;
+            //var expected = 55m;
+            var expected = new OperationResult<decimal>(55m,"");
 
             // Act
             var actual = currentProduct.CalculateSuggestedPrice(10m);
+            //var operationResult = currentProduct.CalculateSuggestedPrice(10m);
+            //var actual = operationResult.Result;
 
             // Assert
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected.Result, actual.Result);
+            Assert.AreEqual(expected.Message, actual.Message);
         }
     }
 }
